@@ -1,4 +1,4 @@
-package br.com.messageria.consumer.business;
+package br.com.messageria.consumer.business.tutorial.one;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -11,7 +11,9 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
-public class TutorialOne implements IReceberMensagem {
+import br.com.messageria.consumer.business.IReceberMensagem;
+
+public class Recv implements IReceberMensagem {
 
 	private final static String QUEUE_NAME = "hello";
 	
