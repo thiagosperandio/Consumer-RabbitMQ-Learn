@@ -1,8 +1,9 @@
 package br.com.consumer;
 
 import br.com.consumer.business.IReceberMensagem;
-import br.com.consumer.business.tutorial1.*;
-import br.com.consumer.business.tutorial2.*;
+import br.com.consumer.business.tutorial1.Recv;
+import br.com.consumer.business.tutorial2.Worker;
+import br.com.consumer.business.tutorial3.ReceiveLogs;
 
 public class ReceiverApp {
 
@@ -16,10 +17,15 @@ public class ReceiverApp {
 	  	case "2":
 	  		versao = new Worker();
 	  		break;
+	  	case "3":
+	  		versao = new ReceiveLogs();
+	  		break;
+	  		
 	  	default:
-	  		versao = new Worker();
+	  		versao = new ReceiveLogs();
 	  		break;
 	  }
+	  
 	  versao.receberMensagem();
 	  
   }

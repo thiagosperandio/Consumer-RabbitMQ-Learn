@@ -13,22 +13,20 @@ import com.rabbitmq.client.Envelope;
 
 import br.com.consumer.business.IReceberMensagem;
 
-public class Worker implements IReceberMensagem {
-
-	private final static String QUEUE_NAME = "task_queue";
+public class ReceiveLogs implements IReceberMensagem {
+	  private static final String EXCHANGE_NAME = "logs";
 	
 	public void receberMensagem() throws IOException, TimeoutException {
 	    ConnectionFactory factory = new ConnectionFactory();
 	    factory.setHost("localhost");
 	    final Connection connection = factory.newConnection();
 	    final Channel channel = connection.createChannel();
-
-    	boolean durable = true; // Fila deve ser persistida no servidor, mantendo-a caso ele páre.  
-    	channel.queueDeclare(QUEUE_NAME, durable, false, false, null);
-	    System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
-	    
-	    int prefetchCount = 1; 
-	    channel.basicQos(prefetchCount); // Deve receber apenas X mensagem(ns) por vez, melhorando o balanceamento entre worker listeners. 
+  
+    	channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
+    	String queueName = channel.queueDeclare().getQueue();
+    	channel.queueBind(queueName, EXCHANGE_NAME, "");
+    	
+	    System.out.println(" [*] Waiting for messages. To exit press CTRL+C"); 
 
 	    final Consumer consumer = new DefaultConsumer(channel) {
 	    	  @Override
@@ -44,8 +42,9 @@ public class Worker implements IReceberMensagem {
 	    	    }
 	    	  }
 	    	};
+	    	
     	boolean autoAck = false; // Só confirma recebimento da mensagem se não der nenhum erro até o fim.
-    	channel.basicConsume(QUEUE_NAME, autoAck, consumer);
+    	channel.basicConsume(queueName, autoAck, consumer);
 	}
 	
   private static void doWork(String task) {
