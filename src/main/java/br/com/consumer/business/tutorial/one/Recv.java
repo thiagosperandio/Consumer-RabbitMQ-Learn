@@ -1,4 +1,4 @@
-package br.com.messageria.consumer.business.tutorial.one;
+package br.com.consumer.business.tutorial.one;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -11,7 +11,7 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
-import br.com.messageria.consumer.business.IReceberMensagem;
+import br.com.consumer.business.IReceberMensagem;
 
 public class Recv implements IReceberMensagem {
 
