@@ -1,4 +1,4 @@
-package br.com.consumer.business.tutorial.one;
+package br.com.consumer.business.tutorial1;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
