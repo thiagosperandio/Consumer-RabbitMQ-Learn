@@ -1,4 +1,4 @@
-package br.com.consumer.business.tutorial1;
+package br.com.consumer.tutorial1;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -11,13 +11,13 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
-import br.com.consumer.business.IReceberMensagem;
+import br.com.consumer.listener.IMessageReceiver;
 
-public class Recv implements IReceberMensagem {
+public class Recv implements IMessageReceiver {
 
 	private final static String QUEUE_NAME = "hello";
 	
-	public void receberMensagem() throws IOException, TimeoutException {
+	public void receive() throws IOException, TimeoutException {
 
 	    ConnectionFactory factory = new ConnectionFactory();
 	    factory.setHost("localhost");

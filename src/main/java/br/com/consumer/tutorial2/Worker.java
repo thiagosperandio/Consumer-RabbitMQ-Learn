@@ -1,4 +1,4 @@
-package br.com.consumer.business.tutorial3;
+package br.com.consumer.tutorial2;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -11,22 +11,24 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
-import br.com.consumer.business.IReceberMensagem;
+import br.com.consumer.listener.IMessageReceiver;
 
-public class ReceiveLogs implements IReceberMensagem {
-	  private static final String EXCHANGE_NAME = "logs";
+public class Worker implements IMessageReceiver {
+
+	private final static String QUEUE_NAME = "task_queue";
 	
-	public void receberMensagem() throws IOException, TimeoutException {
+	public void receive() throws IOException, TimeoutException {
 	    ConnectionFactory factory = new ConnectionFactory();
 	    factory.setHost("localhost");
 	    final Connection connection = factory.newConnection();
 	    final Channel channel = connection.createChannel();
-  
-    	channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
-    	String queueName = channel.queueDeclare().getQueue();
-    	channel.queueBind(queueName, EXCHANGE_NAME, "");
-    	
-	    System.out.println(" [*] Waiting for messages. To exit press CTRL+C"); 
+
+    	boolean durable = true; // Fila deve ser persistida no servidor, mantendo-a caso ele páre.  
+    	channel.queueDeclare(QUEUE_NAME, durable, false, false, null);
+	    System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
+	    
+	    int prefetchCount = 1; 
+	    channel.basicQos(prefetchCount); // Deve receber apenas X mensagem(ns) por vez, melhorando o balanceamento entre worker listeners. 
 
 	    final Consumer consumer = new DefaultConsumer(channel) {
 	    	  @Override
@@ -42,9 +44,8 @@ public class ReceiveLogs implements IReceberMensagem {
 	    	    }
 	    	  }
 	    	};
-	    	
     	boolean autoAck = false; // Só confirma recebimento da mensagem se não der nenhum erro até o fim.
-    	channel.basicConsume(queueName, autoAck, consumer);
+    	channel.basicConsume(QUEUE_NAME, autoAck, consumer);
 	}
 	
   private static void doWork(String task) {
