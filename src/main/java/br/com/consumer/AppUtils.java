@@ -69,4 +69,19 @@ public final class AppUtils {
 		return reducedText;
 	}
 
+	public final static void doSleepWorkByDots(String taskDelayInDots) {
+		doSleepWorkByDots(taskDelayInDots, null);
+	}
+	public final static void doSleepWorkByDots(String task, Long millis) {
+		for (char ch : task.toCharArray()) {
+			if (ch == '.') {
+				try {
+					Thread.sleep(millis == null ? 1000 : millis);
+				} catch (InterruptedException _ignored) {
+					Thread.currentThread().interrupt();
+				}
+			}
+		}
+	}
+
 }
