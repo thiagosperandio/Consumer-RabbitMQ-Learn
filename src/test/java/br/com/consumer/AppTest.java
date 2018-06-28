@@ -1,4 +1,4 @@
-package br.com.messageria.Consumer;
+package br.com.consumer;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

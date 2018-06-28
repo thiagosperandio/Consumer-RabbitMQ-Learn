@@ -2,6 +2,7 @@ package br.com.consumer.listener;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.Date;
 import java.util.concurrent.TimeoutException;
 
@@ -61,7 +62,8 @@ public class MessageReceiver implements IMessageReceiver {
 		this.message = message;
 	}
 
-	public void receive() throws IOException, TimeoutException, IllegalArgumentException {
+	public void receive() 
+			throws ConnectException, IOException, TimeoutException, IllegalArgumentException {
 		if(getQueue() == null || getHost() == null) {
 			throw new IllegalArgumentException("Incorrect or imcomplete data:"
 					+ " fila: " + getQueue()
@@ -90,7 +92,7 @@ public class MessageReceiver implements IMessageReceiver {
 					byte[] body) throws IOException {
 				setMessage(deserializeAsJson(body));
 				System.out.println((new Date()) + " [x] Received: '" 
-		    			+ AppUtils.reduceStringAt(message.toString(), 50) + "(...)'"); // exibir x caracteres no console
+		    			+ AppUtils.reduceStringAt(message.toString(), 100) + "(...)'"); // exibir x caracteres no console
 				channel.basicAck(envelope.getDeliveryTag(), false);
 			}
 		};
